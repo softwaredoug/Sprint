@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include <time.h>
+#include <iostream>
+#include <assert.h>
 #include "PerfTimer.h"
 
 namespace
 {
-	int toNsecTimestamp(const timespec* ts)
+	int64_t toNsecTimestamp(const timespec* ts)
 	{
-		return ts->tv_nsec + (ts->tv_sec * 1000000000);
+        int64_t sec64 = ts->tv_sec;
+		return ts->tv_nsec + (sec64 * 1000000000);
 	}
 
 
 	// lhs - rhs in ns
-	int deltaTimespecNs(const timespec* lhs, const timespec* rhs)
+	int64_t deltaTimespecNs(const timespec* lhs, const timespec* rhs)
 	{
 		return toNsecTimestamp(lhs) - toNsecTimestamp(rhs);
 	}
@@ -39,7 +42,9 @@ public:
 	uint64_t Stop()
 	{
 		clock_gettime(CLOCK_MONOTONIC, &end);
-		return deltaTimespecNs(&end, &begin);
+	    int64_t rVal = deltaTimespecNs(&end, &begin);
+        assert(rVal > 0); 
+        return rVal;
 	}
 };
 
