@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#ifdef SPRINT_POSIX
 #include <time.h>
 #include <iostream>
 #include <assert.h>
@@ -67,4 +68,4 @@ uint64_t PerfTimer::Stop()
 PerfTimer::~PerfTimer()
 {
 }
-
+#endif
