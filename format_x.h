@@ -4,8 +4,11 @@
 #include <cstddef>
 #include <stdint.h>
 
+namespace sprint
+{
+
 template <>
-class Format<'x', uint32_t>
+class Sprint<sprint::flags::NoFlags, -1, -1, 'x', uint32_t>
 // 32 bits has 8 nibbles
 {
 public:
@@ -41,5 +44,6 @@ public:
 	// Append using move semantics
 
 };
+}
 
 #endif

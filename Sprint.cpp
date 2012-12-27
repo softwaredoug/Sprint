@@ -11,12 +11,13 @@
 
 int main(int argc, char* argv[])
 {
+	using namespace sprint;
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
 	PerfTimer timer;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		Format<'x', unsigned int>::append(dest, 60, i);
+		Sprint<sprint::flags::NoFlags, -1, -1, 'x', uint32_t>::append(dest, 60, i);
 	}
 	uint64_t elapsed = timer.Stop();
 	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
@@ -24,7 +25,7 @@ int main(int argc, char* argv[])
 	PerfTimer timer2;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		snprintf(dest2, 60, "%x", i);
+		sprintf_s(dest2, 60, "%x", i);
 	}
 	elapsed = timer2.Stop();
 
