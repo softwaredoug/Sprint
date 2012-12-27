@@ -1,0 +1,8 @@
+cmake_minimum_required (VERSION 2.6)
+project (Sprint)
+file(GLOB Sprint_SRC *.h *.cpp)
+add_executable(Sprint ${Sprint_SRC})
+target_link_libraries(Sprint -lrt)
+if (CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions(-std=c++0x)
+endif()

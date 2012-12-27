@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include <iostream>
 #include <stdint.h>
-#include <Windows.h>
 #include "PerfTimer.h"
 
 #include "format_x.h"
@@ -25,7 +24,7 @@ int main(int argc, char* argv[])
 	PerfTimer timer2;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		sprintf_s(dest2, 60, "%x", i);
+		snprintf(dest2, 60, "%x", i);
 	}
 	elapsed = timer2.Stop();
 

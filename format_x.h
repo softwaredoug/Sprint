@@ -1,6 +1,7 @@
 #ifndef FORMAT_X_20121206
 #define FORMAT_X_20121206
 #include "format_base.h"
+#include <cstddef>
 #include <stdint.h>
 
 template <>
@@ -10,9 +11,9 @@ class Format<'x', uint32_t>
 public:
 	static char lookup[16];
 
-	static inline size_t charLen(uint32_t val)
+	static inline std::size_t charLen(uint32_t val)
 	{
-		size_t rVal = 0;
+		std::size_t rVal = 0;
 		while (val)
 		{
 			++rVal;
@@ -22,9 +23,9 @@ public:
 	}
 
 	// Append to dest, returning num chars written
-	static size_t append(char* dest, const size_t destLen, uint32_t val)
+	static std::size_t append(char* dest, const std::size_t destLen, uint32_t val)
 	{
-		size_t charsNeeded = charLen(val);
+		std::size_t charsNeeded = charLen(val);
 		char* cursor = dest + (charsNeeded);
 		*cursor-- = '\0';
 		*cursor = '0';

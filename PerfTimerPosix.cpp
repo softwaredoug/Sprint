@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#ifdef __posix__
 #include <time.h>
+#include "PerfTimer.h"
 
 namespace
 {
@@ -16,11 +16,12 @@ namespace
 		return toNsecTimestamp(lhs) - toNsecTimestamp(rhs);
 	}
 
-}
+};
 
 
 class PerfTimer::PerfTimerImpl
 {
+public:
 	timespec begin;
 	timespec end;
 
@@ -40,7 +41,25 @@ class PerfTimer::PerfTimerImpl
 		clock_gettime(CLOCK_MONOTONIC, &end);
 		return deltaTimespecNs(&end, &begin);
 	}
+};
+
+PerfTimer::PerfTimer() :
+    m_impl(new PerfTimerImpl())
+{
+
 }
 
+void PerfTimer::Start()
+{
+    m_impl->Start();
+}
 
-#endif
+uint64_t PerfTimer::Stop()
+{
+    return m_impl->Stop();
+}
+
+PerfTimer::~PerfTimer()
+{
+}
+
