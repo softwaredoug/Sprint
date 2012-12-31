@@ -6,30 +6,13 @@
 #include <stdint.h>
 #include "PerfTimer.h"
 #include <string>
+#include <utility>
 #include "Ape.h"
 #include "SprintBin.h"
 
-class Sprint2
-{
-	uint32_t val;
-public:
-	Sprint2(uint32_t valToFormat) : val(valToFormat) {}
-
-	void AppendTo(std::string& str)
-	{
-		char asStr[9];
-		_itoa_s(val, &asStr[0], 9, 16); 
-		str.append(asStr, 9);
-	}
-};
-
-std::string operator + (std::string&& lhs, Sprint2&& rhs)
-{
-	rhs.AppendTo(lhs);
-	return std::move(lhs);
-
-}
-
+#ifndef sprintf_s
+#define sprintf_s snprintf
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -39,7 +22,7 @@ int main(int argc, char* argv[])
 	PerfTimer timer;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		Ape(dest2, 60) + "Hello " + SpBin< Power<4> >(i);
+		Ape(dest, 60) + "Hello " + SpBin< Power<4> >(i);
 	}
 	uint64_t elapsed = timer.Stop();
 	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
@@ -51,17 +34,7 @@ int main(int argc, char* argv[])
 	}
 	elapsed = timer2.Stop();
 
-	std::cout << "SprintF:" << dest2 << " Time: " << elapsed <<  std::endl;
+	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
 
-	std::string foo = "";
-	PerfTimer timer3;
-	for (unsigned int i = 0xf; i < 100; ++i)
-	{
-		foo = std::string() + Sprint2(i);
-	}
-	elapsed = timer3.Stop();
-
-	std::cout << "Sprint2" << foo << " Time: " << elapsed << std::endl;	
 
 }
-
