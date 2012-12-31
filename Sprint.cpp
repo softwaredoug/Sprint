@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	PerfTimer timer;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		Ape(dest2, 60) + "Hello " + SpBin< Power<4> >(i);
+		Ape(dest, 60) + "Hello " + SpBin< Power<4> >(i);
 	}
 	uint64_t elapsed = timer.Stop();
 	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;

@@ -23,10 +23,13 @@ Ape::Ape(Ape&& other) {
 
 Ape Ape::operator+(SprintBase&& val) {
 	// Append val onto this, move into temporary
-	size_t rVal = val.AppendTo(m_baseStr, m_totalBytes - m_cursor);
-	if (rVal > 0)
+	if (m_cursor < m_totalBytes)
 	{
-		m_cursor += rVal;
+		size_t rVal = val.AppendTo(&m_baseStr[m_cursor], m_totalBytes - m_cursor);
+		if (rVal > 0)
+		{
+			m_cursor += rVal;
+		}
 	}
 	return std::move(*this);
 }
