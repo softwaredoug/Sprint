@@ -79,14 +79,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="format_base.h" />
-    <ClInclude Include="format_x.h" />
+    <ClInclude Include="Ape.h" />
+    <ClInclude Include="SprintBinSettings.h" />
+    <ClInclude Include="SprintBase.h" />
+    <ClInclude Include="SprintBin.h" />
+    <ClInclude Include="ToString.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="all_statics.cpp" />
+    <ClCompile Include="Ape.cpp" />
     <ClCompile Include="PerfTimerWin.cpp" />
     <ClCompile Include="PerfTimerPosix.cpp" />
     <ClCompile Include="Sprint.cpp" />
