@@ -8,6 +8,15 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-DSPRINT_POSIX)
     add_definitions(-std=c++0x)
 endif()
+# VC11 contains std::tuple with variadic templates emulation macro.
+# _VARIADIC_MAX defaulted to 5 but gtest requires 10.
+if (MSVC)
+	if (MSVC_VERSION EQUAL 1700)
+		 add_definitions(-D_VARIADIC_MAX=10)
+	endif ()
+endif()
+
+
 
 # We compile Google Test ourselves instead of using pre-compiled libraries.
 # See the Google Test FAQ "Why is it not recommended to install a

@@ -9,10 +9,10 @@
 #include <utility>
 #include "Ape.h"
 #include "SprintBin.h"
-#include "format.h"
+#include "format/format.h"
 
-#ifndef sprintf_s
-#define sprintf_s snprintf
+#if _MSC_VER
+#define snprintf _snprintf
 #endif
 
 int main(int argc, char* argv[])
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	PerfTimer timer2;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		sprintf_s(dest2, 60, "Hello %x", i);
+		snprintf(dest2, 60, "Hello %x", i);
 	}
 	elapsed = timer2.Stop();
 

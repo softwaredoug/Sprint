@@ -10,8 +10,8 @@
 #include "SprintBin.h"
 #include "format.h"
 
-#ifndef sprintf_s
-#define sprintf_s snprintf
+#if _MSC_VER
+#define snprintf _snprintf
 #endif
 
 TEST(DougTest, Foo) {
@@ -40,7 +40,7 @@ int perf()
 	PerfTimer timer2;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		sprintf_s(dest2, 60, "Hello %x", i);
+		snprintf(dest2, 60, "Hello %x", i);
 	}
 	elapsed = timer2.Stop();
 
@@ -54,6 +54,6 @@ int perf()
 	elapsed = timer3.Stop();
 
 	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
-
+	return 0;
 
 }
