@@ -2,7 +2,7 @@
 #define SPRINT_BIN_SETTINGS_20121230_H
 
 
-namespace sprint {
+namespace sprint { namespace bin {
 	enum class HexCase {
 		lower = false,
 		upper = true,
@@ -26,6 +26,6 @@ namespace sprint {
 		};
 	};
 
-}
+}}
 
 #endif

@@ -21,7 +21,7 @@ Ape::Ape(Ape&& other) {
 
 }
 
-Ape Ape::operator+(SprintBase&& val) {
+Ape Ape::operator<<(SprintBase&& val) {
 	// Append val onto this, move into temporary
 	if (m_cursor < m_totalBytes)
 	{
@@ -34,7 +34,7 @@ Ape Ape::operator+(SprintBase&& val) {
 	return std::move(*this);
 }
 
-Ape Ape::operator+(const char src[]) {
+Ape Ape::operator<<(const char src[]) {
 	char* currDest = &m_baseStr[m_cursor];
 	char* end = m_baseStr + m_totalBytes;
 	const char* currSrc = &src[0];

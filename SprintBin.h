@@ -8,6 +8,13 @@
 
 namespace sprint {
 
+// TODO:
+//  (1) add padding pad<char>
+//  (2) define for arbitrary integer size
+//  (3) add sign: sign<char>
+//  (4) add upper/lower for binary
+//  (5) minimize potential code bloat
+//  (6) test
 template <typename PowerT>
 class SpBin : public SprintBase
 {
@@ -55,7 +62,13 @@ public:
 template<typename PowerT>
 char SpBin<PowerT>::lookup[16] =  { '0', '1', '2', '3', '4', '5', '6', '7', '8',
 	'9', 'a', 'b', 'c', 'd', 'e', 'f'};
+}
 
+namespace sprint {
+
+typedef SpBin< bin::Power<4> > asHex;
+typedef SpBin< bin::Power<3> > asOct;
+typedef SpBin< bin::Power<1> > asBin;
 }
 
 #endif

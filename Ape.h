@@ -36,10 +36,10 @@ public:
 	Ape(Ape&& other);
 
 	// Append
-	Ape operator + (SprintBase&& spr);
+	Ape operator << (SprintBase&& spr);
 
 	// Possibly also take a const char* for 
-	Ape operator + (const char* val);
+	Ape operator << (const char* val);
 
 private:
 	char* m_baseStr;
