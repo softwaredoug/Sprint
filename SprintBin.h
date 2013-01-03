@@ -9,10 +9,7 @@
 namespace sprint {
 
 // TODO:
-//  (1) add padding pad<char>
 //  (2) define for arbitrary integer size
-//  (3) add sign: sign<char>
-//  (4) add upper/lower for binary
 //  (5) minimize potential code bloat
 //  (6) test
 template <typename PowerT, typename CaseT = bin::LowerHex, typename PadT = bin::NoPad>
@@ -23,10 +20,7 @@ private:
 public:
 	SpBin(uint32_t val) : m_val(val)
 	{
-
 	}
-	static char lookup[16];
-
 
 	static inline std::size_t charLen(uint32_t val)
 	{
@@ -73,8 +67,7 @@ namespace sprint {
 
 // default hex formatters
 
-
-// configurable versions, use inheritance
+// Lowercase Hex
 template <typename PadT = bin::NoPad> 
 class asHexL : public SpBin< bin::Power<4>, bin::LowerHex, PadT> 
 	{ 
@@ -82,7 +75,7 @@ class asHexL : public SpBin< bin::Power<4>, bin::LowerHex, PadT>
 		asHexL(uint32_t val) : SpBin<bin::Power<4>, bin::LowerHex, PadT>(val) {}
 	};
 
-
+// Uppercase Hex
 template <typename PadT = bin::NoPad> 
 class asHexU : public SpBin< bin::Power<4>, bin::UpperHex, PadT> 
 	{ 
@@ -90,6 +83,7 @@ class asHexU : public SpBin< bin::Power<4>, bin::UpperHex, PadT>
 		asHexU(uint32_t val) : SpBin<bin::Power<4>, bin::UpperHex, PadT>(val) {}
 	};
 
+// Octal Formatting
 template <typename PadT = bin::NoPad> 
 class asOct : public SpBin< bin::Power<3>, bin::LowerHex, PadT> 
 	{ 
@@ -98,6 +92,7 @@ class asOct : public SpBin< bin::Power<3>, bin::LowerHex, PadT>
 	};
 
 
+// Binary Formatting
 template <typename PadT = bin::NoPad> 
 class asBin : public SpBin< bin::Power<1>, bin::LowerHex, PadT> 
 	{ 
