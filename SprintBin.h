@@ -15,7 +15,7 @@ namespace sprint {
 //  (4) add upper/lower for binary
 //  (5) minimize potential code bloat
 //  (6) test
-template <typename PowerT>
+template <typename PowerT, typename CaseT = bin::LowerHex>
 class SpBin : public SprintBase
 {
 private:
@@ -49,7 +49,7 @@ public:
 		while (m_val)
 		{
 			int lookupKey = m_val & PowerT::mask;
-			*cursor-- = lookup[m_val & PowerT::mask];
+			*cursor-- = CaseT::lookup[m_val & PowerT::mask];
 			m_val = m_val >> PowerT::pow;
 		}
 		return charsNeeded;
@@ -59,16 +59,22 @@ public:
 
 };
 
-template<typename PowerT>
-char SpBin<PowerT>::lookup[16] =  { '0', '1', '2', '3', '4', '5', '6', '7', '8',
-	'9', 'a', 'b', 'c', 'd', 'e', 'f'};
 }
 
 namespace sprint {
 
-typedef SpBin< bin::Power<4> > asHex;
+// default hex formatters
+//typedef SpBin< bin::Power<4> > asHex;
 typedef SpBin< bin::Power<3> > asOct;
 typedef SpBin< bin::Power<1> > asBin;
+
+// configurable versions, use inheritance
+template <typename CaseT = bin::LowerHex> 
+class asHex : public SpBin< bin::Power<4>, CaseT> 
+	{ 
+	public:
+		asHex(uint32_t val) : SpBin<bin::Power<4>, CaseT>(val) {}
+	};
 }
 
 #endif

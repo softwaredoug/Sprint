@@ -9,6 +9,7 @@
 #include "Ape.h"
 #include "SprintBin.h"
 #include "format.h"
+#include <stdint.h>
 
 using namespace sprint;
 
@@ -16,10 +17,31 @@ using namespace sprint;
 #define snprintf _snprintf
 #endif
 
-TEST(DougTest, Foo) {
+
+TEST(BinToStr, BinNumericFormattingBasic) {
 	char buff[50];
-	Ape(buff, 50) << "0x" << asHex(10);
-    EXPECT_EQ("0xa", std::string(buff));
+	Ape(buff, 50) << asHex<>(10);
+    EXPECT_STREQ("a", buff);
+
+	Ape(buff, 50) << asHex< bin::UpperHex >(10);
+	EXPECT_STREQ("A", buff);
+
+	Ape(buff, 50) << asOct(8);
+	EXPECT_STREQ("10", buff);
+
+	Ape(buff, 50) << asBin(8);
+	EXPECT_STREQ("1000", buff);
+}
+
+TEST(BinToStr, SameAsSprintf) {
+	char apeBuff[50];
+	char sprintfBuff[50];
+
+	// max 32-bit unsigned
+	uint32_t max32 = 0xFFFFFFFF;
+	Ape(apeBuff, 50) << asHex<>(max32);
+	snprintf(sprintfBuff, 50, "%x", max32);
+	EXPECT_STREQ(apeBuff, sprintfBuff);
 }
 
 
@@ -36,7 +58,7 @@ int perf()
 	PerfTimer timer;
 	for (unsigned int i = 0xf; i < 100; ++i)
 	{
-		Ape(dest, 60) << "Hello " << asHex(i);
+		Ape(dest, 60) << "Hello " << asHex<>(i);
 	}
 	uint64_t elapsed = timer.Stop();
 	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
@@ -73,5 +95,5 @@ int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
 	int rVal = RUN_ALL_TESTS();
 	perf();
-	return rVal;
+		return rVal;
 }
