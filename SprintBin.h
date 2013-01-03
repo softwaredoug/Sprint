@@ -15,7 +15,7 @@ namespace sprint {
 //  (4) add upper/lower for binary
 //  (5) minimize potential code bloat
 //  (6) test
-template <typename PowerT, typename CaseT = bin::LowerHex>
+template <typename PowerT, typename CaseT = bin::LowerHex, typename PadT = bin::NoPad>
 class SpBin : public SprintBase
 {
 private:
@@ -43,7 +43,12 @@ public:
 	size_t AppendTo(char* dest, size_t destLen)
 	{
 		std::size_t charsNeeded = charLen(m_val);
-		char* cursor = dest + (charsNeeded);
+		std::size_t width = PadT::charWidth(charsNeeded);
+		if (width > destLen)
+		{
+			return 0;
+		}
+		char* cursor = dest + (width);
 		*cursor-- = '\0';
 		*cursor = '0';
 		while (m_val)
@@ -52,29 +57,52 @@ public:
 			*cursor-- = CaseT::lookup[m_val & PowerT::mask];
 			m_val = m_val >> PowerT::pow;
 		}
-		return charsNeeded;
+		PadT::pad(cursor, width, charsNeeded);
+		return width;
 	}
 
 	// Append using move semantics
 
 };
 
+// Specialize for padding
+
 }
 
 namespace sprint {
 
 // default hex formatters
-//typedef SpBin< bin::Power<4> > asHex;
-typedef SpBin< bin::Power<3> > asOct;
-typedef SpBin< bin::Power<1> > asBin;
+
 
 // configurable versions, use inheritance
-template <typename CaseT = bin::LowerHex> 
-class asHex : public SpBin< bin::Power<4>, CaseT> 
+template <typename PadT = bin::NoPad> 
+class asHexL : public SpBin< bin::Power<4>, bin::LowerHex, PadT> 
 	{ 
 	public:
-		asHex(uint32_t val) : SpBin<bin::Power<4>, CaseT>(val) {}
+		asHexL(uint32_t val) : SpBin<bin::Power<4>, bin::LowerHex, PadT>(val) {}
+	};
+
+
+template <typename PadT = bin::NoPad> 
+class asHexU : public SpBin< bin::Power<4>, bin::UpperHex, PadT> 
+	{ 
+	public:
+		asHexU(uint32_t val) : SpBin<bin::Power<4>, bin::UpperHex, PadT>(val) {}
+	};
+
+template <typename PadT = bin::NoPad> 
+class asOct : public SpBin< bin::Power<3>, bin::LowerHex, PadT> 
+	{ 
+	public:
+		asOct(uint32_t val) : SpBin<bin::Power<3>, bin::LowerHex, PadT>(val) {}
+	};
+
+
+template <typename PadT = bin::NoPad> 
+class asBin : public SpBin< bin::Power<1>, bin::LowerHex, PadT> 
+	{ 
+	public:
+		asBin(uint32_t val) : SpBin<bin::Power<1>, bin::LowerHex, PadT>(val) {}
 	};
 }
-
 #endif

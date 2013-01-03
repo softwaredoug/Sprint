@@ -3,6 +3,44 @@
 
 
 namespace sprint { namespace bin {
+
+	// Configure pad 
+	template <unsigned int _minWidth, char _padChar>
+	class Pad {
+	public:
+		static inline std::size_t charWidth(std::size_t charsNeeded)
+		{
+			return (charsNeeded > _minWidth) ? charsNeeded : _minWidth;
+		}
+		static inline void pad(char* currPos, std::size_t width, std::size_t charsNeeded)
+		{
+			// pad width - charsNeeded
+			std::size_t remainingChars = width - charsNeeded;
+			if (remainingChars > 0)
+			{
+				while (remainingChars > 0)
+				{
+					*currPos-- = _padChar;
+					remainingChars--;
+				}
+			}
+		}
+	};
+
+	// no padding, default
+	template <>
+	class Pad<0, '\0'> {
+	public:
+		static inline std::size_t charWidth(std::size_t widthNeeded) {return widthNeeded;}
+		static inline void pad(char* currPos, std::size_t width, std::size_t charsNeeded)
+		{
+
+		}
+	};
+
+	typedef Pad<0, '\0'> NoPad;
+		
+	// Configure the hex case
 	enum class HexCase : bool {
 		lower = false,
 		upper = true,

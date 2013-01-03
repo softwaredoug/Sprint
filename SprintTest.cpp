@@ -18,19 +18,39 @@ using namespace sprint;
 #endif
 
 
-TEST(BinToStr, BinNumericFormattingBasic) {
+TEST(BinToStr, NumericFormattingBasic) {
 	char buff[50];
-	Ape(buff, 50) << asHex<>(10);
+	Ape(buff, 50) << asHexL<>(10);
     EXPECT_STREQ("a", buff);
 
-	Ape(buff, 50) << asHex< bin::UpperHex >(10);
+	Ape(buff, 50) << asHexU<>(10);
 	EXPECT_STREQ("A", buff);
 
-	Ape(buff, 50) << asOct(8);
+	Ape(buff, 50) << asOct<>(8);
 	EXPECT_STREQ("10", buff);
 
-	Ape(buff, 50) << asBin(8);
+	Ape(buff, 50) << asBin<>(8);
 	EXPECT_STREQ("1000", buff);
+}
+
+TEST(BinToStr, PadFormatting) {
+	char buff[50] = {'\0'};
+	char shortBuff[5] = {'\0'};
+
+	using namespace sprint::bin;
+	// Check the positive case
+	Ape(buff, 50) << asHexL< Pad<8, '0'>>(11);
+	EXPECT_STREQ("0000000b", buff);
+
+	Ape(buff, 50) << asBin< Pad<8, ' '>>(11);
+	EXPECT_STREQ("    1011", buff);
+
+	Ape(buff, 50) << asHexL< Pad<1, ' '>>(1000);
+	EXPECT_STREQ("3e8", buff);
+
+	// Check trying to pad more than buff
+	Ape(shortBuff, 5) << asHexL< Pad<8, ' '>>(1);
+	EXPECT_STREQ("", shortBuff); 
 }
 
 TEST(BinToStr, SameAsSprintf) {
@@ -39,7 +59,7 @@ TEST(BinToStr, SameAsSprintf) {
 
 	// max 32-bit unsigned
 	uint32_t max32 = 0xFFFFFFFF;
-	Ape(apeBuff, 50) << asHex<>(max32);
+	Ape(apeBuff, 50) << asHexL<>(max32);
 	snprintf(sprintfBuff, 50, "%x", max32);
 	EXPECT_STREQ(apeBuff, sprintfBuff);
 }
@@ -49,22 +69,25 @@ TEST(BinToStr, SameAsSprintf) {
 //
 
 
-int perf()
+void perfSinglHex()
 {
 	using namespace sprint;
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
 	char dest3[60] = {'\0'};
+	std::cout << "Single Hex perf test";
+	const unsigned int min = 0xf;
+	const unsigned int max = 1000;
 	PerfTimer timer;
-	for (unsigned int i = 0xf; i < 100; ++i)
+	for (unsigned int i = min; i < max; ++i)
 	{
-		Ape(dest, 60) << "Hello " << asHex<>(i);
+		Ape(dest, 60) << "Hello " << asHexL<>(i);
 	}
 	uint64_t elapsed = timer.Stop();
 	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
 
 	PerfTimer timer2;
-	for (unsigned int i = 0xf; i < 100; ++i)
+	for (unsigned int i = min; i < max; ++i)
 	{
 		snprintf(dest2, 60, "Hello %x", i);
 	}
@@ -73,15 +96,118 @@ int perf()
 	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
 
     PerfTimer timer3;
-	for (unsigned int i = 0xf; i < 100; ++i)
+	for (unsigned int i = min; i < max; ++i)
 	{
         fmt::Format("Hello {0:x}") << i;
     }
 	elapsed = timer3.Stop();
 
 	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
-	return 0;
 
+	std::ostringstream oss;
+	PerfTimer timer4;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		oss << std::hex << i;
+		oss.clear(); oss.str("");
+	}
+	elapsed = timer4.Stop();
+
+	std::cout << "stringstream:" << dest << " Time: " << elapsed <<  std::endl;
+}
+
+void perfSingleOct()
+{
+	using namespace sprint;
+	char dest[60] = {'\0'};
+	char dest2[60] = {'\0'};
+	char dest3[60] = {'\0'};
+	std::cout << "Single Oct perf test";
+	const unsigned int min = 0xf;
+	const unsigned int max = 1000;
+	PerfTimer timer;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		Ape(dest, 60) << "Hello " << asOct<>(i);
+	}
+	uint64_t elapsed = timer.Stop();
+	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
+
+	PerfTimer timer2;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		snprintf(dest2, 60, "Hello %o", i);
+	}
+	elapsed = timer2.Stop();
+
+	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
+
+    PerfTimer timer3;
+	for (unsigned int i = min; i < max; ++i)
+	{
+        fmt::Format("Hello {0:o}") << i;
+    }
+	elapsed = timer3.Stop();
+
+	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
+
+	std::ostringstream oss;
+	PerfTimer timer4;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		oss << std::oct << i;
+		oss.clear(); oss.str("");
+	}
+	elapsed = timer4.Stop();
+
+	std::cout << "stringstream:" << dest << " Time: " << elapsed <<  std::endl;
+}
+
+void perfSinglHexPad()
+{
+	using namespace sprint;
+	char dest[60] = {'\0'};
+	char dest2[60] = {'\0'};
+	char dest3[60] = {'\0'};
+	std::cout << "Single Hex perf test";
+	const unsigned int min = 0xf;
+	const unsigned int max = 1000;
+	PerfTimer timer;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		Ape(dest, 60) << "Hello " << asHexL< bin::Pad<8, '0'>>(i);
+	}
+	uint64_t elapsed = timer.Stop();
+	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
+
+	PerfTimer timer2;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		snprintf(dest2, 60, "Hello %08x", i);
+	}
+	elapsed = timer2.Stop();
+
+	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
+
+    PerfTimer timer3;
+	for (unsigned int i = min; i < max; ++i)
+	{
+        fmt::Format("Hello {0:08x}") << i;
+    }
+	elapsed = timer3.Stop();
+
+	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
+
+	std::ostringstream oss;
+	PerfTimer timer4;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		oss << std::setw(8) << std::setfill('0') << std::hex << i;
+		oss.clear(); oss.str("");
+	}
+	elapsed = timer4.Stop();
+
+	std::cout << "stringstream:" << dest << " Time: " << elapsed <<  std::endl;
 }
 
 int main(int argc, char **argv) {
@@ -94,6 +220,8 @@ int main(int argc, char **argv) {
 	#endif
 	testing::InitGoogleTest(&argc, argv);
 	int rVal = RUN_ALL_TESTS();
-	perf();
-		return rVal;
+	perfSinglHex();
+	perfSingleOct();
+	perfSinglHexPad();
+	return rVal;
 }
