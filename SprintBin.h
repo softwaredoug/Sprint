@@ -53,7 +53,6 @@ public:
 		*cursor = '0';
 		while (m_val)
 		{
-			int lookupKey = m_val & PowerT::mask;
 			*cursor-- = CaseT::lookup[m_val & PowerT::mask];
 			m_val = m_val >> PowerT::pow;
 		}

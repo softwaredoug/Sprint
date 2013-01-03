@@ -32,7 +32,7 @@ namespace sprint { namespace bin {
 	class Pad<0, '\0'> {
 	public:
 		static inline std::size_t charWidth(std::size_t widthNeeded) {return widthNeeded;}
-		static inline void pad(char* currPos, std::size_t width, std::size_t charsNeeded)
+		static inline void pad(char* , std::size_t , std::size_t )
 		{
 
 		}
