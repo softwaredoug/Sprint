@@ -168,8 +168,8 @@ void perfSinglHexPad()
 	using namespace sprint;
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
-	char dest3[60] = {'\0'};
-	std::cout << "Single Hex perf test\n";
+    std::string dest3;
+    std::cout << "Single Hex perf test\n";
 	const unsigned int min = 0xf;
 	const unsigned int max = 1000;
 	PerfTimer timer;
@@ -192,11 +192,11 @@ void perfSinglHexPad()
     PerfTimer timer3;
 	for (unsigned int i = min; i < max; ++i)
 	{
-        fmt::Format("Hello {0:08x}") << i;
+        dest3 = str(fmt::Format("Hello {0:08x}") << i);
     }
 	elapsed = timer3.Stop();
 
-	std::cout << "Format:      " << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Format:      " << dest3 << " Time: " << elapsed <<  std::endl;
 
 	std::ostringstream oss;
 	PerfTimer timer4;
@@ -207,7 +207,72 @@ void perfSinglHexPad()
 	}
 	elapsed = timer4.Stop();
 
-	std::cout << "stringstream:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "stringstream: " << oss.str().c_str() << " Time: " << elapsed <<  std::endl;
+}
+
+
+void perfBinCsv()
+{
+	using namespace sprint;
+	char dest[60] = {'\0'};
+	char dest2[60] = {'\0'};
+    std::string dest3;
+    std::cout << "Bin->Str CSV perf test\n";
+	const unsigned int min = 0xf;
+	const unsigned int max = 1000;
+	PerfTimer timer;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		Ape(dest, 60) << "Hello " 
+                      << asHexL<>(i) 
+                      << ","
+                      << asOct<>(i+1)
+                      << ","
+                      << asHexU<>(i+2)
+                      << ","
+                      << asHexL< bin::Pad<8, '0'>>(i+3) 
+                      << ","
+                      << asOct< bin::Pad<8, '0'>>(i+4)
+                      << ","
+                      << asHexU< bin::Pad<8, '0'>>(i+5);
+	}
+	uint64_t elapsed = timer.Stop();
+	std::cout << "Sprint:      " << dest << " Time: " << elapsed <<  std::endl;
+
+	PerfTimer timer2;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		snprintf(dest2, 60, "Hello %x,%o,%X,%08x,%08o,%08X", i, i+1, i+2, i+3,i+4, i+5);
+	}
+	elapsed = timer2.Stop();
+
+	std::cout << "SprintF:     " << dest2 << " Time: " << elapsed <<  std::endl;
+
+    PerfTimer timer3;
+	for (unsigned int i = min; i < max; ++i)
+	{
+        dest3 = str(fmt::Format("Hello {0:x},{1:o},{2:X},{3:08x},{4:08o},{5:08X}") << i << (i+1) << (i+2) << (i+3) << (i+4) << (i+5));
+    }
+	elapsed = timer3.Stop();
+
+	std::cout << "Format:      " << dest3 << " Time: " << elapsed <<  std::endl;
+
+	std::ostringstream oss;
+	PerfTimer timer4;
+	for (unsigned int i = min; i < max; ++i)
+	{
+		oss.clear(); oss.str("");
+		oss << "Hello " << std::nouppercase
+            << std::hex << i << ',' 
+            << std::oct << (i+1) << ','
+            << std::hex << std::uppercase << (i+2) << ','
+            << std::hex << std::nouppercase << std::setfill('0') << std::setw(8) << (i+3) << ','
+            << std::oct << std::setfill('0') << std::setw(8) <<  (i+4) << ','
+            << std::hex << std::setfill('0') << std::setw(8) << std::uppercase << (i+5);
+	}
+	elapsed = timer4.Stop();
+
+	std::cout << "stringstream:" << oss.str() << " Time: " << elapsed <<  std::endl;
 }
 
 int main(int argc, char **argv) {
@@ -223,5 +288,6 @@ int main(int argc, char **argv) {
 	perfSinglHex();
 	perfSingleOct();
 	perfSinglHexPad();
-	return rVal;
+    perfBinCsv();
+    return rVal;
 }
