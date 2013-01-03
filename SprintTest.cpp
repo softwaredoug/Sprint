@@ -75,7 +75,7 @@ void perfSinglHex()
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
 	char dest3[60] = {'\0'};
-	std::cout << "Single Hex perf test";
+	std::cout << "Single Hex perf test\n";
 	const unsigned int min = 0xf;
 	const unsigned int max = 1000;
 	PerfTimer timer;
@@ -84,7 +84,7 @@ void perfSinglHex()
 		Ape(dest, 60) << "Hello " << asHexL<>(i);
 	}
 	uint64_t elapsed = timer.Stop();
-	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Sprint:       " << dest << " Time: " << elapsed <<  std::endl;
 
 	PerfTimer timer2;
 	for (unsigned int i = min; i < max; ++i)
@@ -93,7 +93,7 @@ void perfSinglHex()
 	}
 	elapsed = timer2.Stop();
 
-	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "SprintF:      " << dest << " Time: " << elapsed <<  std::endl;
 
     PerfTimer timer3;
 	for (unsigned int i = min; i < max; ++i)
@@ -102,7 +102,7 @@ void perfSinglHex()
     }
 	elapsed = timer3.Stop();
 
-	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Format:       " << dest << " Time: " << elapsed <<  std::endl;
 
 	std::ostringstream oss;
 	PerfTimer timer4;
@@ -122,7 +122,7 @@ void perfSingleOct()
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
 	char dest3[60] = {'\0'};
-	std::cout << "Single Oct perf test";
+	std::cout << "Single Oct perf test\n";
 	const unsigned int min = 0xf;
 	const unsigned int max = 1000;
 	PerfTimer timer;
@@ -131,7 +131,7 @@ void perfSingleOct()
 		Ape(dest, 60) << "Hello " << asOct<>(i);
 	}
 	uint64_t elapsed = timer.Stop();
-	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Sprint:        " << dest << " Time: " << elapsed <<  std::endl;
 
 	PerfTimer timer2;
 	for (unsigned int i = min; i < max; ++i)
@@ -140,7 +140,7 @@ void perfSingleOct()
 	}
 	elapsed = timer2.Stop();
 
-	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "SprintF:       " << dest << " Time: " << elapsed <<  std::endl;
 
     PerfTimer timer3;
 	for (unsigned int i = min; i < max; ++i)
@@ -149,7 +149,7 @@ void perfSingleOct()
     }
 	elapsed = timer3.Stop();
 
-	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Format:        " << dest << " Time: " << elapsed <<  std::endl;
 
 	std::ostringstream oss;
 	PerfTimer timer4;
@@ -160,7 +160,7 @@ void perfSingleOct()
 	}
 	elapsed = timer4.Stop();
 
-	std::cout << "stringstream:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "stringstream:  " << dest << " Time: " << elapsed <<  std::endl;
 }
 
 void perfSinglHexPad()
@@ -169,7 +169,7 @@ void perfSinglHexPad()
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
 	char dest3[60] = {'\0'};
-	std::cout << "Single Hex perf test";
+	std::cout << "Single Hex perf test\n";
 	const unsigned int min = 0xf;
 	const unsigned int max = 1000;
 	PerfTimer timer;
@@ -178,7 +178,7 @@ void perfSinglHexPad()
 		Ape(dest, 60) << "Hello " << asHexL< bin::Pad<8, '0'>>(i);
 	}
 	uint64_t elapsed = timer.Stop();
-	std::cout << "Doug:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Sprint:      " << dest << " Time: " << elapsed <<  std::endl;
 
 	PerfTimer timer2;
 	for (unsigned int i = min; i < max; ++i)
@@ -187,7 +187,7 @@ void perfSinglHexPad()
 	}
 	elapsed = timer2.Stop();
 
-	std::cout << "SprintF:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "SprintF:     " << dest << " Time: " << elapsed <<  std::endl;
 
     PerfTimer timer3;
 	for (unsigned int i = min; i < max; ++i)
@@ -196,7 +196,7 @@ void perfSinglHexPad()
     }
 	elapsed = timer3.Stop();
 
-	std::cout << "Format:" << dest << " Time: " << elapsed <<  std::endl;
+	std::cout << "Format:      " << dest << " Time: " << elapsed <<  std::endl;
 
 	std::ostringstream oss;
 	PerfTimer timer4;
