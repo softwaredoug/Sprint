@@ -40,13 +40,18 @@ public:
 		clock_gettime(CLOCK_MONOTONIC, &begin);
 	}
 
-	uint64_t Stop()
+	tick_t Stop()
 	{
 		clock_gettime(CLOCK_MONOTONIC, &end);
 	    int64_t rVal = deltaTimespecNs(&end, &begin);
         assert(rVal > 0); 
         return rVal;
 	}
+
+	static double toNanoSecs(tick_t numTicks)
+    {
+        return numTicks;
+    }
 };
 
 PerfTimer::PerfTimer() :
@@ -60,12 +65,17 @@ void PerfTimer::Start()
     m_impl->Start();
 }
 
-uint64_t PerfTimer::Stop()
+tick_t PerfTimer::Stop()
 {
     return m_impl->Stop();
 }
 
 PerfTimer::~PerfTimer()
 {
+}
+
+double PerfTimer::toNanoSecs(tick_t numTicks)
+{
+    return PerfTimerImpl::toNanoSecs(numTicks);
 }
 #endif

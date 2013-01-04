@@ -206,8 +206,8 @@ void perfSinglHexPad()
 	PerfTimer timer4;
 	for (unsigned int i = begin; i < end; i+=step)
 	{
+		oss.str("");
 		oss << "Hello " << std::setw(8) << std::setfill('0') << std::hex << i;
-		oss.clear(); oss.str("");
 	}
 	elapsed = timer4.Stop();
 

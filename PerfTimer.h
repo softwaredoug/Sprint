@@ -5,6 +5,9 @@
 #include <stdint.h>
 
 // This is a performance timer intended to run on either Linux or Windows
+
+typedef uint64_t tick_t;
+
 class PerfTimer
 {
 private:
@@ -19,10 +22,10 @@ public:
 	void Start();
 
 	// Stop the timer
-	uint64_t Stop();
+	tick_t Stop();
 
-	// TODO:
-	// uint64_t toMicroSec();
+    // Convert ticks to nanoseconds for friendly io
+	static double toNanoSecs(tick_t numTicks);
 };
 
 #endif
