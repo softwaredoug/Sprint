@@ -14,8 +14,6 @@ Internally, "Ape" simply apes the buffer. It holds a char pointer, a length, and
 ###Specify Formatting at Compile Time, not Run Time
 The built-in Sprints all specify how the formatting should occur at compile time. This strategy allows specialization of formatting for specific use-cases. For example, the implementation of `asHexL<Pad(8,'0')>` can theoretically be a different string formatting implementation highly optimized for that specific case.
 
-More importantly, 
-
 ###The compiler catches formatting bugs
 Because we don't rely on format strings, and instead rely on the semantics of C++, the compiler catches are bugs for us. And it does it in a way thats almost two orders of magnitude faster than ostringstream, the other option that allows the compiler to catch formatting bugs.
 
