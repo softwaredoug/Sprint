@@ -220,7 +220,8 @@ void perfBinCsv()
 	using namespace sprint;
 	char dest[60] = {'\0'};
 	char dest2[60] = {'\0'};
-    std::string dest3;
+	//char dest3[60] = {'\0'};
+	std::string dest3;
     std::cout << "Bin->Str CSV perf test\n";
 
 	PerfTimer timer;
@@ -251,20 +252,37 @@ void perfBinCsv()
 
 	std::cout << "SprintF:     " << dest2 << " Time: " << elapsed <<  std::endl;
 
-    PerfTimer timer3;
+	fmt::Formatter format;
+	PerfTimer timer3;
 	for (unsigned int i = begin; i < end; i+=step)
 	{
-        dest3 = str(fmt::Format("Hello {0:x},{1:o},{2:X},{3:08x},{4:08o},{5:08X}") << i << (i+1) << (i+2) << (i+3) << (i+4) << (i+5));
+		using fmt::FormatSpec;
+		format.Clear();
+        format << "Hello ";
+        format.Write(i, FormatSpec(0, 'x'));
+        format << ",";
+        format.Write(i + 1, FormatSpec(0, 'o'));
+        format << ",";
+        format.Write(i + 2, FormatSpec(0, 'X'));
+        format << ",";
+        format.Write(i + 3, FormatSpec(8, 'x', '0'));
+        format << ",";
+        format.Write(i + 4, FormatSpec(8, 'o', '0'));
+        format << ",";
+        format.Write(i + 5, FormatSpec(8, 'X', '0'));
+        format << '\0';
+        //strcpy(dest3, format.c_str()); // This is not required because the output buffer is directly accessible*/
+        //dest3 = str(fmt::Format("Hello {0:x},{1:o},{2:X},{3:08x},{4:08o},{5:08X}") << i << (i+1) << (i+2) << (i+3) << (i+4) << (i+5));
     }
 	elapsed = timer3.Stop();
 
-	std::cout << "Format:      " << dest3 << " Time: " << elapsed <<  std::endl;
+	std::cout << "Format:      " << format.c_str() << " Time: " << elapsed <<  std::endl;
 
 	std::ostringstream oss;
 	PerfTimer timer4;
 	for (unsigned int i = begin; i < end; i+=step)
 	{
-		oss.clear(); oss.str("");
+		oss.str("");
 		oss << "Hello " << std::nouppercase
             << std::hex << i << ',' 
             << std::oct << (i+1) << ','
@@ -274,8 +292,29 @@ void perfBinCsv()
             << std::hex << std::setfill('0') << std::setw(8) << std::uppercase << (i+5);
 	}
 	elapsed = timer4.Stop();
+	std::cout << "ostringstream " << oss.str() << " Time: " << elapsed <<  std::endl;
 
-	std::cout << "stringstream:" << oss.str() << " Time: " << elapsed <<  std::endl;
+	fmt::Formatter format2;
+	PerfTimer timer5;
+	for (unsigned int i = begin; i < end; i+= step)
+	{
+		format2.Clear();
+		format2 << "Hello " ;
+        format2 << format::sprint::asHexL<>(i) ;
+        format2 << ",";
+        format2 << format::sprint::asOct<>(i+1);
+        format2 << ",";
+        format2 << format::sprint::asHexU<>(i+2);
+        format2 << ",";
+        format2 << format::sprint::asHexL< format::sprint::Pad<8, '0'>>(i+3); 
+        format2 << ",";
+        format2 << format::sprint::asOct< format::sprint::Pad<8, '0'>>(i+4);
+        format2 << ",";
+        format2 << format::sprint::asHexU< format::sprint::Pad<8, '0'>>(i+5);
+	}
+	elapsed = timer5.Stop();
+
+	std::cout << "format w/sprint:" << format2.c_str() << " Time: " << elapsed <<  std::endl;
 }
 
 int main(int argc, char **argv) {
