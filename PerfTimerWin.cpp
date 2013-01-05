@@ -27,6 +27,14 @@ public:
 		return end.QuadPart - begin.QuadPart; 
 	}
 	
+	static double toNanoSecs(tick_t numTicks)
+	{
+		LARGE_INTEGER ticksPerSecond;
+		QueryPerformanceFrequency(&ticksPerSecond);
+		
+		double ticksPerNanoSeconds = (double)(ticksPerSecond.QuadPart) / (double)(1000000000);
+		return numTicks * ticksPerNanoSeconds;
+	}
 
 };
 
@@ -48,6 +56,11 @@ uint64_t PerfTimer::Stop()
 
 PerfTimer::~PerfTimer()
 {
+}
+
+double PerfTimer::toNanoSecs(tick_t numTicks)
+{
+	return PerfTimerImpl::toNanoSecs(numTicks);
 }
 
 #endif // MSC_VER
