@@ -1,4 +1,5 @@
-(WORK IN PROGRESS, NOT READY FOR PRODUCTION)
+This was an experimental toy that ended up helping out a lot with [cppformat](https://github.com/cppformat/cppformat)! You should check out the type safe API over there if this interests you.
+
 
 Sprint
 ======
